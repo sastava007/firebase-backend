@@ -1,0 +1,11 @@
+{
+    "port":"8081",
+    "apiKey": "AIzaSyCLMIfjdkpnjXJET4lS1Sr5VuoBTxH3uJE",
+    "authDomain": "diatoz-qna.firebaseapp.com",
+    "databaseURL": "https://diatoz-qna.firebaseio.com",
+    "projectId": "diatoz-qna",
+    "storageBucke": "diatoz-qna.appspot.com",
+    "messagingSenderId": "317827549410",
+    "appId": "1:317827549410:web:a1d6b7dc2117a94b9a36bb",
+    "measurementId": "G-SNTYZ7H5VV"
+}
