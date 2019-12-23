@@ -7,10 +7,11 @@ const Comments=database.ref().child("Comments");
 
 router.post('/addComment',(req,res)=>{
 
+    const date=new Date;
     const newComment={
       slug:req.body.slug,
       desc:req.body.desc,
-      date:new Date
+      date:date
     };
     const cId=Comments.push(newComment).getKey();
     const parentId=req.body.parentId; 
@@ -39,22 +40,37 @@ router.post('/addComment',(req,res)=>{
     });
   })
   
-  router.get('/getCommentById/:pId',async (req,res)=>{
+  router.get('/getCommentById/:pId', async (req,res)=>{
 
-    var children=[];
-    var result=[];
-    Comments.child(req.params.pId).child("children").once('value',async (comment)=>{
-        children=comment.val();
-        console.log(comment.val());
-    });
+  const childComment=new Promise((resolve,reject)=>{
+    const result=Comments.child((req.params.pId)+"/children").once('value');
+    if(result)
+    return resolve(result);
+    else
+    return reject(new Error("Couldn't find child comments")); 
+  });
 
-    console.log(children);
+    const results=[];
+    const result=async()=>{
+        let comments=await childComment;
+        comments=comments.val();
+      
+        for(const ele in comments)
+        {
+              const result=await Comments.child(comments[ele]).once('value');
+              results.push(result.val());
+        }
+        return results;
+  }
 
-    for(const child of children){
-        console.log(child.key);
-        result.push(child.key);
-    }
-    return res.send(result);
+  result()
+    .then((result)=>{
+      return res.send(result);
+    })
+    .catch((err)=>{
+      console.log(err.message);
+    })
+
   })
   
   module.exports=router;
